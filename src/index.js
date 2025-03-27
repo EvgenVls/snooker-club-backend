@@ -1,8 +1,17 @@
 import express from 'express';
+import pino from 'pino-http';
 
 const app = express();
 
 const PORT = 3000;
+
+app.use(
+  pino({
+    transport: {
+      target: 'pino-pretty',
+    },
+  }),
+);
 
 app.use((req, res, next) => {
   console.log(`Time: ${new Date().toLocaleString()}`);
