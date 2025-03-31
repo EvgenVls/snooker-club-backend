@@ -3,6 +3,7 @@ import pino from 'pino-http';
 import cors from 'cors';
 
 import { getEnvVar } from './utils/getEnvVar.js';
+import { getAllExercises, getExerciseById } from './services/exercises.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -23,6 +24,34 @@ export const startServer = () => {
   app.get('/', (req, res) => {
     res.json({
       message: 'Hello snooker',
+    });
+  });
+
+  app.get('/exercises', async (req, res) => {
+    const exercises = await getAllExercises();
+
+    res.status(200).json({
+      status: 200,
+      data: exercises,
+      message: 'All exercises are successfully completed.',
+    });
+  });
+
+  app.get('/exercises/:exerciseId', async (req, res, next) => {
+    const { exerciseId } = req.params;
+    const exercise = await getExerciseById(exerciseId);
+
+    if (!exercise) {
+      res.status(404).json({
+        message: 'Exercise not found',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: 200,
+      data: exercise,
+      message: 'The exercise will be successfully completed.',
     });
   });
 
