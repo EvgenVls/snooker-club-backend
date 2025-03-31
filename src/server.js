@@ -61,6 +61,7 @@ export const startServer = () => {
       }
       const { status = 500 } = error;
       res.status(status).json({
+        status,
         message: error.message,
       });
     }
