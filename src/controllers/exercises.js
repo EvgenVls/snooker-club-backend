@@ -1,3 +1,5 @@
+import createHttpError from 'http-errors';
+
 import { getAllExercises, getExerciseById } from '../services/exercises.js';
 
 export const getExercisesController = async (req, res) => {
@@ -16,11 +18,7 @@ export const getExerciseByIdController = async (req, res, next) => {
     const exercise = await getExerciseById(exerciseId);
 
     if (!exercise) {
-      res.status(404).json({
-        status: 404,
-        message: `Exercise with id=${exerciseId} not found`,
-      });
-      return;
+      throw createHttpError(404, `Exercise with id=${exerciseId} not found`);
     }
 
     res.status(200).json({
