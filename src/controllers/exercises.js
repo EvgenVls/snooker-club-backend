@@ -5,6 +5,7 @@ import {
   getExerciseById,
   createExercise,
   deleteExercise,
+  updateExercise,
 } from '../services/exercises.js';
 
 export const getExercisesController = async (req, res) => {
@@ -66,5 +67,41 @@ export const deleteExerciseController = async (req, res, next) => {
   res.status(204).json({
     status: 204,
     message: `Exercise with id=${exerciseId} was deleted successfully.`,
+  });
+};
+
+export const upsertExerciseController = async (req, res, next) => {
+  const { exerciseId } = req.params;
+
+  const result = await updateExercise(exerciseId, req.body, { upsert: true });
+
+  if (!result) {
+    next(createHttpError(404, 'Exercise not found'));
+    return;
+  }
+
+  const status = result.isNew ? 201 : 200;
+
+  res.status(status).json({
+    status,
+    message: `Exercise with id=${exerciseId} was upserted successfully`,
+    data: result.exercise,
+  });
+};
+
+export const patchExerciseController = async (req, res, next) => {
+  const { exerciseId } = req.params;
+
+  const result = await updateExercise(exerciseId, req.body);
+
+  if (!result) {
+    next(createHttpError(404, 'Exercise not found'));
+    return;
+  }
+
+  res.json({
+    status: 200,
+    message: `Exercise with id=${exerciseId} was patched sccessfully`,
+    data: res.exercise,
   });
 };

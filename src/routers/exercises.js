@@ -5,6 +5,8 @@ import {
   getExerciseByIdController,
   creteExerciseController,
   deleteExerciseController,
+  upsertExerciseController,
+  patchExerciseController,
 } from '../controllers/exercises.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
@@ -16,6 +18,10 @@ router.get('/exercises/:exerciseId', ctrlWrapper(getExerciseByIdController));
 
 router.post('/exercises', ctrlWrapper(creteExerciseController));
 
-router.delete('/exercise/:exerciseId', ctrlWrapper(deleteExerciseController));
+router.delete('/exercises/:exerciseId', ctrlWrapper(deleteExerciseController));
+
+router.put('/exercises/:exerciseId', ctrlWrapper(upsertExerciseController));
+
+router.patch('/exercises/:exerciseId', ctrlWrapper(patchExerciseController));
 
 export default router;
