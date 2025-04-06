@@ -1,6 +1,11 @@
 import createHttpError from 'http-errors';
 
-import { getAllExercises, getExerciseById } from '../services/exercises.js';
+import {
+  getAllExercises,
+  getExerciseById,
+  createExercise,
+  deleteExercise,
+} from '../services/exercises.js';
 
 export const getExercisesController = async (req, res) => {
   const exercises = await getAllExercises();
@@ -15,6 +20,7 @@ export const getExercisesController = async (req, res) => {
 export const getExerciseByIdController = async (req, res, next) => {
   try {
     const { exerciseId } = req.params;
+
     const exercise = await getExerciseById(exerciseId);
 
     if (!exercise) {
@@ -36,4 +42,29 @@ export const getExerciseByIdController = async (req, res, next) => {
       message: error.message,
     });
   }
+};
+
+export const creteExerciseController = async (req, res) => {
+  const exercise = await createExercise(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created an exercise',
+    data: exercise,
+  });
+};
+
+export const deleteExerciseController = async (req, res, next) => {
+  const { exerciseId } = req.params;
+
+  const exercise = await deleteExercise(exerciseId);
+
+  if (!exercise) {
+    throw createHttpError(404, `Exercise with id=${exerciseId} not found`);
+  }
+
+  res.status(204).json({
+    status: 204,
+    message: `Exercise with id=${exerciseId} was deleted successfully.`,
+  });
 };
